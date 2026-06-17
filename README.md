@@ -82,7 +82,11 @@ Composition) reports.
    `RAILWAY_DATABASE_PATH` or change it to a local file like `database.db`. The
    `.env.example` file is tuned for Railway deployment.
 
-5. **Initialize the database with sample data**:
+5. **Initialize the database with sample data** (optional):
+
+   The app automatically creates tables and seeds sample data on the first
+   startup. Run `init_db.py` only if you want to reset the database to a clean
+   state:
 
    ```bash
    python init_db.py
@@ -164,8 +168,7 @@ temporary client.
    - `RAILWAY_DATABASE_PATH=/data/database.db`
    - `SECRET_KEY=<a strong random string>`
 5. Railway will detect the `Procfile` and start the app with Gunicorn.
-6. After the first deploy, run the init script once via Railway's shell or add a
-   startup hook:
+6. After the first deploy, the app will automatically create the tables and seed the two sample clients on startup. You can also run `init_db.py` manually via Railway's shell if you ever want to reset to a clean state:
 
    ```bash
    python init_db.py
