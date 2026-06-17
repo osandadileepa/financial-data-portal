@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generate Report | AW Client Report Portal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: { 50: '#eff6ff', 100: '#dbeafe', 500: '#3b82f6', 600: '#2563eb', 700: '#1a56db', 900: '#1e3a8a' }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col">
+    <nav class="bg-brand-700 text-white shadow">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex items-center gap-3">
+                    <span class="font-bold text-xl tracking-tight">AW Client Report Portal</span>
+                </div>
+                <div class="flex items-center gap-4">
+                    <a href="/" class="text-sm hover:text-brand-100 transition">Dashboard</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+        <div class="mb-6 flex items-center justify-between">
+            <div>
+                <h1 class="text-2xl font-bold text-slate-900" id="report-title">Generate Quarterly Report</h1>
+                <p class="text-slate-600 mt-1" id="client-subtitle">Enter current balances for the report.</p>
+            </div>
+            <a href="/" class="text-sm text-brand-700 hover:underline">Back to dashboard</a>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Left column: data entry -->
+            <div class="lg:col-span-2 space-y-6">
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+                    <h2 class="text-lg font-semibold text-slate-900 mb-4">Report Period</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 mb-1" for="quarter">Quarter <span class="text-red-500">*</span></label>
+                            <select id="quarter" name="quarter" required class="w-full rounded-md border border-slate-300 px-3 py-2 focus:border-brand-500 focus:ring-brand-500">
+                                <option value="Q1">Q1</option>
+                                <option value="Q2">Q2</option>
+                                <option value="Q3">Q3</option>
+                                <option value="Q4">Q4</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 mb-1" for="year">Year <span class="text-red-500">*</span></label>
+                            <input type="number" id="year" name="year" required min="2000" max="2100" value="2026"
+                                class="w-full rounded-md border border-slate-300 px-3 py-2 focus:border-brand-500 focus:ring-brand-500">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SACS Section -->
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+                    <h2 class="text-lg font-semibold text-slate-900 mb-4 border-b border-slate-100 pb-2">SACS - Cashflow</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 mb-1">Monthly Inflow</label>
+                            <div class="relative">
+                                <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-500">$</span>
+                                <input type="number" id="inflow" disabled class="w-full rounded-md border border-slate-200 bg-slate-100 pl-7 pr-3 py-2 text-slate-600">
+                            </div>
+                            <p class="text-xs text-slate-500 mt-1">From client salary</p>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 mb-1">Monthly Outflow</label>
+                            <div class="relative">
+                                <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-500">$</span>
+                                <input type="number" id="outflow" disabled class="w-full rounded-md border border-slate-200 bg-slate-100 pl-7 pr-3 py-2 text-slate-600">
+                            </div>
+                            <p class="text-xs text-slate-500 mt-1">From client expenses</p>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 mb-1" for="private_reserve_balance">Private Reserve Balance <span class="text-red-500">*</span></label>
+                            <div class="relative">
+                                <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-500">$</span>
+                                <input type="number" id="private_reserve_balance" name="private_reserve_balance" step="0.01" min="0" required
+                                    class="w-full rounded-md border border-slate-300 pl-7 pr-3 py-2 focus:border-brand-500 focus:ring-brand-500 balance-input">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TCC Section - Retirement -->
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+                    <h2 class="text-lg font-semibold text-slate-900 mb-4 border-b border-slate-100 pb-2">TCC - Retirement Accounts</h2>
+                    <div id="retirement-accounts" class="space-y-4">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+
+                <!-- TCC Section - Non-Retirement -->
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+                    <h2 class="text-lg font-semibold text-slate-900 mb-4 border-b border-slate-100 pb-2">TCC - Non-Retirement Accounts</h2>
+                    <div id="non-retirement-accounts" class="space-y-4">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+
+                <!-- TCC Section - Trust -->
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+                    <h2 class="text-lg font-semibold text-slate-900 mb-4 border-b border-slate-100 pb-2">TCC - Trust</h2>
+                    <div id="trust-accounts" class="space-y-4">
+                        <!-- Populated by JS -->
+                    </div>
+                    <p class="text-xs text-slate-500 mt-2">Trust is shown separately and is not included in the non-retirement total.</p>
+                </div>
+
+                <!-- TCC Section - Liabilities -->
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+                    <h2 class="text-lg font-semibold text-slate-900 mb-4 border-b border-slate-100 pb-2">TCC - Liabilities</h2>
+                    <div id="liability-accounts" class="space-y-4">
+                        <!-- Populated by JS -->
+                    </div>
+                    <p class="text-xs text-slate-500 mt-2">Liabilities are displayed separately and are never subtracted from net worth.</p>
+                </div>
+            </div>
+
+            <!-- Right column: sticky totals and actions -->
+            <div class="lg:col-span-1">
+                <div class="sticky top-6 space-y-6">
+                    <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+                        <h2 class="text-lg font-semibold text-slate-900 mb-4">Live Totals</h2>
+
+                        <div class="space-y-3">
+                            <div class="flex justify-between items-center py-2 border-b border-slate-100">
+                                <span class="text-sm text-slate-600">Excess</span>
+                                <span class="font-semibold text-green-600" id="total-excess">$0.00</span>
+                            </div>
+                            <div class="flex justify-between items-center py-2 border-b border-slate-100">
+                                <span class="text-sm text-slate-600">Private Reserve Target</span>
+                                <span class="font-semibold" id="total-reserve-target">$0.00</span>
+                            </div>
+                            <div class="flex justify-between items-center py-2 border-b border-slate-100">
+                                <span class="text-sm text-slate-600">Client 1 Retirement</span>
+                                <span class="font-semibold" id="total-client1-retirement">$0.00</span>
+                            </div>
+                            <div class="flex justify-between items-center py-2 border-b border-slate-100">
+                                <span class="text-sm text-slate-600">Client 2 Retirement</span>
+                                <span class="font-semibold" id="total-client2-retirement">$0.00</span>
+                            </div>
+                            <div class="flex justify-between items-center py-2 border-b border-slate-100">
+                                <span class="text-sm text-slate-600">Non-Retirement</span>
+                                <span class="font-semibold" id="total-non-retirement">$0.00</span>
+                            </div>
+                            <div class="flex justify-between items-center py-2 border-b border-slate-100">
+                                <span class="text-sm text-slate-600">Trust</span>
+                                <span class="font-semibold" id="total-trust">$0.00</span>
+                            </div>
+                            <div class="flex justify-between items-center py-3 bg-brand-50 rounded-lg px-3">
+                                <span class="text-sm font-semibold text-brand-900">Grand Total</span>
+                                <span class="font-bold text-brand-900" id="total-grand">$0.00</span>
+                            </div>
+                            <div class="flex justify-between items-center py-2 border-b border-slate-100">
+                                <span class="text-sm text-slate-600">Liabilities (separate)</span>
+                                <span class="font-semibold text-red-600" id="total-liabilities">$0.00</span>
+                            </div>
+                        </div>
+
+                        <div class="mt-4">
+                            <div class="w-full bg-slate-200 rounded-full h-2.5">
+                                <div id="validation-progress" class="bg-brand-600 h-2.5 rounded-full transition-all" style="width: 0%"></div>
+                            </div>
+                            <p class="text-xs text-slate-500 mt-1"><span id="completed-fields">0</span> of <span id="total-fields">0</span> fields completed</p>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+                        <button type="button" id="generate-report" class="w-full bg-brand-700 text-white px-4 py-3 rounded-md font-semibold hover:bg-brand-800 transition shadow-sm mb-3">Generate Report</button>
+                        <p class="text-xs text-slate-500 text-center">PDFs will be generated and ready for download.</p>
+                    </div>
+
+                    <div id="download-section" class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 hidden">
+                        <h3 class="text-sm font-semibold text-slate-900 mb-3">Download PDFs</h3>
+                        <a id="download-sacs" href="#" class="block w-full text-center bg-green-50 text-green-700 px-4 py-2 rounded-md font-medium hover:bg-green-100 mb-2">Download SACS PDF</a>
+                        <a id="download-tcc" href="#" class="block w-full text-center bg-green-50 text-green-700 px-4 py-2 rounded-md font-medium hover:bg-green-100">Download TCC PDF</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div id="toast" class="fixed bottom-6 right-6 transform translate-y-20 opacity-0 transition-all duration-300 z-50" role="status">
+        <div class="bg-slate-800 text-white px-4 py-3 rounded-lg shadow-lg flex items-center gap-3">
+            <span id="toast-icon">✓</span>
+            <span id="toast-message">Success</span>
+        </div>
+    </div>
+
+    <div id="loading-overlay" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-lg p-6 shadow-xl flex flex-col items-center">
+            <div class="animate-spin rounded-full h-10 w-10 border-b-2 border-brand-700"></div>
+            <p class="mt-3 text-sm font-medium text-slate-700" id="loading-message">Generating report...</p>
+        </div>
+    </div>
+
+    <script src="/static/js/app.js"></script>
+    <script src="/static/js/report_form.js"></script>
+</body>
+</html>

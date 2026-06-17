@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}Dashboard | AW Client Report Portal{% endblock %}
+{% block content %}
+<div class="mb-8">
+    <h1 class="text-2xl font-bold text-slate-900">Client Dashboard</h1>
+    <p class="text-slate-600 mt-1">Manage clients and generate quarterly reports.</p>
+</div>
+
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="client-grid">
+    <div class="text-center py-12 text-slate-400 col-span-full">Loading clients...</div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+{% endblock %}

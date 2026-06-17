@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block title %}Report History | AW Client Report Portal{% endblock %}
+
+{% block content %}
+<div class="mb-6">
+    <h1 class="text-2xl font-bold text-slate-900">Report History</h1>
+    <p class="text-slate-600 mt-1">{{ client.full_name }} — re-download or review past quarterly reports.</p>
+</div>
+
+<div class="bg-white shadow rounded-lg overflow-hidden">
+    <div class="px-6 py-4 border-b border-slate-200 flex justify-between items-center">
+        <h2 class="text-lg font-semibold text-slate-800">Generated Reports</h2>
+        <a href="/report/{{ client.id }}" class="bg-brand-700 text-white px-4 py-2 rounded-md text-sm font-semibold hover:bg-brand-600 transition">
+            Generate New Report
+        </a>
+    </div>
+
+    {% if reports %}
+    <table class="min-w-full divide-y divide-slate-200">
+        <thead class="bg-slate-50">
+            <tr>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Quarter</th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Generated</th>
+                <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-slate-500 uppercase tracking-wider">Downloads</th>
+            </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-slate-200">
+            {% for report in reports %}
+            <tr>
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-slate-900">{{ report.quarter }} {{ report.year }}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-600">{{ report.generated_at[:10] if report.generated_at else "—" }}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                    <a href="/api/reports/{{ report.id }}/download/sacs" class="text-brand-700 hover:text-brand-600 mr-4">SACS PDF</a>
+                    <a href="/api/reports/{{ report.id }}/download/tcc" class="text-brand-700 hover:text-brand-600">TCC PDF</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <div class="px-6 py-10 text-center text-slate-500">
+        No reports have been generated yet for this client.
+    </div>
+    {% endif %}
+</div>
+
+<div class="mt-6">
+    <a href="/" class="text-brand-700 hover:text-brand-600 text-sm font-medium">&larr; Back to Dashboard</a>
+</div>
+{% endblock %}

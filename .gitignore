@@ -150,9 +150,8 @@ activemq-data/
 *.sage.py
 
 # Environments
-.env
+
 .envrc
-.venv
 env/
 venv/
 ENV/
@@ -238,3 +237,9 @@ wheels/
 # IDE
 .vscode/
 .idea/
+.commandcode
+
+.python-packages/
+generated_pdfs/
+app.log
+get-pip.py

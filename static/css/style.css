@@ -1,0 +1,58 @@
+/* Custom styles beyond Tailwind */
+
+/* Validation error state */
+input.error,
+select.error,
+textarea.error {
+    border-color: #ef4444 !important;
+    background-color: #fef2f2;
+}
+
+input.error:focus,
+select.error:focus,
+textarea.error:focus {
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.2);
+}
+
+/* Account rows */
+.account-row {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 0.5rem;
+    padding: 1rem;
+}
+
+.account-row.error {
+    border-color: #ef4444;
+    background: #fef2f2;
+}
+
+/* Toast animation */
+#toast.show {
+    transform: translateY(0);
+    opacity: 1;
+}
+
+/* Sticky sidebar on report page */
+.sticky {
+    position: sticky;
+    top: 1.5rem;
+}
+
+/* Print helpers */
+@media print {
+    nav, footer, .no-print {
+        display: none !important;
+    }
+}
+
+/* Smooth transitions for totals */
+[id^="total-"] {
+    transition: color 0.2s ease;
+}
+
+/* Reference value styling */
+.reference-value {
+    font-size: 0.75rem;
+    color: #64748b;
+}

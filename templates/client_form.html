@@ -1,0 +1,157 @@
+{% extends "base.html" %}
+{% block title %}{{ 'Edit' if client else 'Add' }} Client | AW Client Report Portal{% endblock %}
+{% block content %}
+<div class="max-w-5xl mx-auto">
+    <div class="mb-6 flex items-center justify-between">
+        <div>
+            <h1 class="text-2xl font-bold text-slate-900" id="form-title">Add Client</h1>
+            <p class="text-slate-600 mt-1">Enter client and spouse information, accounts, trust, and liabilities.</p>
+        </div>
+        <a href="/" class="text-sm text-brand-700 hover:underline">Back to dashboard</a>
+    </div>
+
+    <form id="client-form" class="space-y-8">
+        <input type="hidden" id="client-id" value="{{ client.id if client else '' }}">
+
+        <!-- Personal Information -->
+        <section class="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+            <h2 class="text-lg font-semibold text-slate-900 mb-4 border-b border-slate-100 pb-2">Personal Information</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1" for="first_name">First Name <span class="text-red-500">*</span></label>
+                    <input type="text" id="first_name" name="first_name" required value="{{ client.first_name if client else '' }}"
+                        class="w-full rounded-md border border-slate-300 px-3 py-2 focus:border-brand-500 focus:ring-brand-500">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1" for="last_name">Last Name <span class="text-red-500">*</span></label>
+                    <input type="text" id="last_name" name="last_name" required value="{{ client.last_name if client else '' }}"
+                        class="w-full rounded-md border border-slate-300 px-3 py-2 focus:border-brand-500 focus:ring-brand-500">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1" for="dob">Date of Birth <span class="text-red-500">*</span></label>
+                    <input type="date" id="dob" name="dob" required value="{{ client.dob if client else '' }}"
+                        class="w-full rounded-md border border-slate-300 px-3 py-2 focus:border-brand-500 focus:ring-brand-500">
+                    <p class="text-xs text-slate-500 mt-1" id="age-display"></p>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1" for="ssn_last4">SSN Last 4 <span class="text-red-500">*</span></label>
+                    <input type="text" id="ssn_last4" name="ssn_last4" maxlength="4" required value="{{ client.ssn_last4 if client else '' }}"
+                        class="w-full rounded-md border border-slate-300 px-3 py-2 focus:border-brand-500 focus:ring-brand-500">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1" for="spouse_first_name">Spouse First Name</label>
+                    <input type="text" id="spouse_first_name" name="spouse_first_name" value="{{ client.spouse_first_name if client else '' }}"
+                        class="w-full rounded-md border border-slate-300 px-3 py-2 focus:border-brand-500 focus:ring-brand-500">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1" for="spouse_last_name">Spouse Last Name</label>
+                    <input type="text" id="spouse_last_name" name="spouse_last_name" value="{{ client.spouse_last_name if client else '' }}"
+                        class="w-full rounded-md border border-slate-300 px-3 py-2 focus:border-brand-500 focus:ring-brand-500">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1" for="spouse_dob">Spouse Date of Birth</label>
+                    <input type="date" id="spouse_dob" name="spouse_dob" value="{{ client.spouse_dob if client else '' }}"
+                        class="w-full rounded-md border border-slate-300 px-3 py-2 focus:border-brand-500 focus:ring-brand-500">
+                    <p class="text-xs text-slate-500 mt-1" id="spouse-age-display"></p>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1" for="spouse_ssn_last4">Spouse SSN Last 4</label>
+                    <input type="text" id="spouse_ssn_last4" name="spouse_ssn_last4" maxlength="4" value="{{ client.spouse_ssn_last4 if client else '' }}"
+                        class="w-full rounded-md border border-slate-300 px-3 py-2 focus:border-brand-500 focus:ring-brand-500">
+                </div>
+            </div>
+        </section>
+
+        <!-- Cashflow -->
+        <section class="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+            <h2 class="text-lg font-semibold text-slate-900 mb-4 border-b border-slate-100 pb-2">Monthly Cashflow</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1" for="monthly_salary">Monthly Salary <span class="text-red-500">*</span></label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-500">$</span>
+                        <input type="number" id="monthly_salary" name="monthly_salary" step="0.01" min="0" required value="{{ client.monthly_salary if client else '' }}"
+                            class="w-full rounded-md border border-slate-300 pl-7 pr-3 py-2 focus:border-brand-500 focus:ring-brand-500">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1" for="monthly_expenses">Monthly Expenses <span class="text-red-500">*</span></label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-500">$</span>
+                        <input type="number" id="monthly_expenses" name="monthly_expenses" step="0.01" min="0" required value="{{ client.monthly_expenses if client else '' }}"
+                            class="w-full rounded-md border border-slate-300 pl-7 pr-3 py-2 focus:border-brand-500 focus:ring-brand-500">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1" for="private_reserve_target">Private Reserve Target</label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-500">$</span>
+                        <input type="number" id="private_reserve_target" name="private_reserve_target" step="0.01" min="0"
+                            value="{{ client.private_reserve_target if client else '' }}"
+                            class="w-full rounded-md border border-slate-300 pl-7 pr-3 py-2 focus:border-brand-500 focus:ring-brand-500">
+                    </div>
+                    <p class="text-xs text-slate-500 mt-1">Defaults to 6 × monthly expenses</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Retirement Accounts -->
+        <section class="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+            <div class="flex items-center justify-between mb-4 border-b border-slate-100 pb-2">
+                <h2 class="text-lg font-semibold text-slate-900">Retirement Accounts</h2>
+                <button type="button" id="add-retirement" class="text-sm bg-brand-50 text-brand-700 px-3 py-1.5 rounded-md hover:bg-brand-100 font-medium">+ Add Account</button>
+            </div>
+            <div id="retirement-accounts" class="space-y-4">
+                <!-- Populated by JS -->
+            </div>
+            <p class="text-xs text-slate-500 mt-2">Add 1–6 retirement accounts.</p>
+        </section>
+
+        <!-- Non-Retirement Accounts -->
+        <section class="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+            <div class="flex items-center justify-between mb-4 border-b border-slate-100 pb-2">
+                <h2 class="text-lg font-semibold text-slate-900">Non-Retirement Accounts</h2>
+                <button type="button" id="add-non-retirement" class="text-sm bg-brand-50 text-brand-700 px-3 py-1.5 rounded-md hover:bg-brand-100 font-medium">+ Add Account</button>
+            </div>
+            <div id="non-retirement-accounts" class="space-y-4">
+                <!-- Populated by JS -->
+            </div>
+            <p class="text-xs text-slate-500 mt-2">Add 1–6 brokerage/joint accounts. Trusts are entered separately.</p>
+        </section>
+
+        <!-- Trusts -->
+        <section class="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+            <div class="flex items-center justify-between mb-4 border-b border-slate-100 pb-2">
+                <h2 class="text-lg font-semibold text-slate-900">Trust</h2>
+                <button type="button" id="add-trust" class="text-sm bg-brand-50 text-brand-700 px-3 py-1.5 rounded-md hover:bg-brand-100 font-medium">+ Add Property</button>
+            </div>
+            <div id="trusts" class="space-y-4">
+                <!-- Populated by JS -->
+            </div>
+        </section>
+
+        <!-- Liabilities -->
+        <section class="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+            <div class="flex items-center justify-between mb-4 border-b border-slate-100 pb-2">
+                <h2 class="text-lg font-semibold text-slate-900">Liabilities</h2>
+                <button type="button" id="add-liability" class="text-sm bg-brand-50 text-brand-700 px-3 py-1.5 rounded-md hover:bg-brand-100 font-medium">+ Add Liability</button>
+            </div>
+            <div id="liabilities" class="space-y-4">
+                <!-- Populated by JS -->
+            </div>
+            <p class="text-xs text-slate-500 mt-2">Add 0–3 liabilities. These are displayed separately and never subtracted from net worth.</p>
+        </section>
+
+        <div class="flex items-center justify-end gap-4">
+            <a href="/" class="text-slate-600 hover:text-slate-900 font-medium">Cancel</a>
+            <button type="submit" id="save-client" class="bg-brand-700 text-white px-6 py-2.5 rounded-md font-semibold hover:bg-brand-800 transition shadow-sm">Save Client</button>
+        </div>
+    </form>
+</div>
+{% endblock %}
+{% block scripts %}
+<script>
+    window.initialClientData = {{ client | tojson | safe }};
+</script>
+<script src="{{ url_for('static', filename='js/client_form.js') }}"></script>
+{% endblock %}
