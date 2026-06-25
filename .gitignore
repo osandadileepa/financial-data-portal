@@ -237,7 +237,6 @@ wheels/
 # IDE
 .vscode/
 .idea/
-.commandcode
 
 .python-packages/
 generated_pdfs/
